@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* ========== COMPLETE CSS (unchanged, fully working) ========== */
+    /* ========== CSS (unchanged, fully working) ========== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background-color: #001F3D; font-family: 'Inter', sans-serif; color: #00FFAA; overflow-x: hidden; position: relative; padding-top: 1rem; }
     .animated-gradient-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: linear-gradient(125deg, #001F3D 0%, #005B80 30%, #00FFAA 60%, #001F3D 80%, #00B3A1 100%); background-size: 300% 300%; animation: gradientShift 14s ease infinite; }
@@ -123,6 +123,7 @@
 <div id="overlay" class="overlay"></div>
 
 <main>
+  <!-- HOME (unchanged) -->
   <section id="home" class="relative px-6 py-16 md:py-24 overflow-hidden">
     <div class="glow-blob top-20 right-0"></div>
     <div class="container mx-auto max-w-6xl relative z-10">
@@ -146,6 +147,7 @@
   </section>
   <div class="section-transition"></div>
 
+  <!-- WORK (belt) -->
   <section id="work" class="py-20 px-6">
     <div class="container mx-auto max-w-7xl">
       <div class="text-center mb-12">
@@ -161,6 +163,7 @@
   </section>
   <div class="section-transition"></div>
 
+  <!-- PROCESS -->
   <section id="process" class="py-20 px-6 bg-[#005B80]/70 backdrop-blur-sm">
     <div class="container mx-auto max-w-4xl">
       <div class="text-center mb-12"><div class="text-[#00FFAA] text-sm uppercase tracking-wider font-semibold">// OUR PROCESS</div><h2 class="text-3xl md:text-4xl font-bold text-white">A clean, proven pipeline</h2></div>
@@ -173,6 +176,7 @@
   </section>
   <div class="section-transition"></div>
 
+  <!-- ABOUT -->
   <section id="about" class="py-20 px-6 bg-[#005B80]/30 backdrop-blur-sm">
     <div class="container mx-auto max-w-4xl">
       <div class="text-center mb-12"><div class="text-[#00FFAA] text-sm uppercase tracking-wider font-semibold">// ABOUT ME</div><h2 class="text-3xl md:text-4xl font-bold text-white mt-2">Crafting code, building futures</h2></div>
@@ -183,6 +187,7 @@
   </section>
   <div class="section-transition"></div>
 
+  <!-- SERVICES -->
   <section id="services" class="py-20 px-6">
     <div class="container mx-auto max-w-6xl">
       <div class="text-center mb-12"><div class="text-[#00FFAA] text-sm uppercase tracking-wider font-semibold">// WHAT WE OFFER</div><h2 class="text-3xl md:text-4xl font-bold text-white mt-2">Tailored solutions for your needs</h2></div>
@@ -192,6 +197,7 @@
   </section>
   <div class="section-transition"></div>
 
+  <!-- CONTACT -->
   <section id="contact" class="py-20 px-6">
     <div class="container mx-auto max-w-3xl">
       <div class="text-center mb-10"><h2 class="text-3xl md:text-4xl font-bold text-white">Ready to scale?</h2><p class="text-[#00FFAA] mt-2">Let's build something extraordinary together.</p></div>
@@ -339,10 +345,27 @@
   renderServices(hardcodedServices);
   populateServiceDropdown(hardcodedServices);
 
-  // === SANITY INTEGRATION (public API, no token) ===
+  // === SANITY INTEGRATION (public API, no token, using your schema fields) ===
   const SANITY_PROJECT_ID = "sa8b5pq9";
   const SANITY_DATASET = "production";
-  
+
+  // Helper to convert Sanity image asset reference to URL
+  function imageUrlFromRef(ref) {
+    if (!ref) return '';
+    // If it's already a string URL (legacy), return as is
+    if (typeof ref === 'string' && ref.startsWith('http')) return ref;
+    // If it's an asset object with _ref
+    const assetId = ref.asset?._ref || ref;
+    if (typeof assetId === 'string' && assetId.startsWith('image-')) {
+      const parts = assetId.split('-');
+      const id = parts[1];
+      const dimensions = parts[2];
+      const extension = dimensions?.split('.')[1] || 'jpg';
+      return `https://cdn.sanity.io/images/${SANITY_PROJECT_ID}/${SANITY_DATASET}/${id}.${extension}`;
+    }
+    return '';
+  }
+
   async function fetchSanity(query) {
     const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v1/data/query/${SANITY_DATASET}?query=${encodeURIComponent(query)}`;
     try {
@@ -355,12 +378,19 @@
       return null;
     }
   }
-  
+
   (async () => {
     if (SANITY_PROJECT_ID && SANITY_PROJECT_ID !== "YOUR_SANITY_PROJECT_ID") {
-      // Fetch projects – note: fields match your schema exactly
-      const projects = await fetchSanity(`*[_type == "project"] | order(order asc) { title, category, description, metric, imageUrl, projectUrl, type }`);
-      if (projects && projects.length) renderBelt(projects);
+      // Fetch projects – map `image` asset to URL, and `link` to projectUrl
+      const projects = await fetchSanity(`*[_type == "project"] | order(order asc) { title, category, description, metric, image, link, type }`);
+      if (projects && projects.length) {
+        const transformed = projects.map(p => ({
+          ...p,
+          image: imageUrlFromRef(p.image),
+          projectUrl: p.link
+        }));
+        renderBelt(transformed);
+      }
       const services = await fetchSanity(`*[_type == "service"] | order(order asc) { title, icon, description, price, discount }`);
       if (services && services.length) {
         renderServices(services);
