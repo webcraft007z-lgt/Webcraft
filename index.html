@@ -5,14 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Webcraft</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <!-- Tailwind CSS CDN – you can replace with a local build later -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* ========== MAIN STYLES ========== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background-color: #001F3D;
@@ -49,7 +48,6 @@
     }
     h1, h2, h3, .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
     
-    /* Floating navbar */
     .glass-nav {
       background: rgba(0, 91, 128, 0.6);
       backdrop-filter: blur(16px);
@@ -78,7 +76,6 @@
       transform: scale(1.02);
     }
     
-    /* Glass cards */
     .glass-card {
       background: rgba(0, 127, 128, 0.7);
       backdrop-filter: blur(4px);
@@ -111,7 +108,6 @@
       border-color: #00FFAA;
       background: rgba(0, 91, 128, 0.5);
     }
-    
     .inner-glow::after {
       content: '';
       position: absolute;
@@ -128,7 +124,6 @@
       color: #00FFAA;
     }
     
-    /* Infinite belt */
     .belt-wrapper {
       position: relative;
       width: 100%;
@@ -187,7 +182,6 @@
       .belt-wrapper::before, .belt-wrapper::after { width: 40px; }
     }
     
-    /* Form elements */
     .neon-input {
       background: #001F3D;
       border: 1px solid #007F80;
@@ -344,7 +338,6 @@
       opacity: 1;
     }
     
-    /* Custom scrollbar */
     ::-webkit-scrollbar { width: 10px; height: 10px; }
     ::-webkit-scrollbar-track { background: #001F3D; border-radius: 10px; }
     ::-webkit-scrollbar-thumb { background: #00FFAA; border-radius: 10px; box-shadow: inset 0 0 3px #00B3A1; }
@@ -352,7 +345,6 @@
     ::-webkit-scrollbar-corner { background: #007F80; }
     * { scrollbar-width: thin; scrollbar-color: #00FFAA #001F3D; }
     
-    /* Responsive navigation */
     .nav-links-desktop { display: flex; gap: 2rem; }
     .hamburger { display: none; font-size: 1.8rem; cursor: pointer; background: transparent; border: none; color: #00FFAA; padding: 0.2rem; }
     .side-panel {
@@ -506,7 +498,14 @@
             </select>
             <label>Choose a service *</label>
           </div>
-          <div class="mt-4 flex flex-wrap items-center justify-between bg-[#001F3D]/50 p-3 rounded-xl border border-[#00FFAA]/30 gap-3"><span class="text-white"><i class="fas fa-palette mr-2"></i>Add Logo Design (+$300)</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" name="logo_design" value="Yes" class="sr-only peer" id="logoDesignToggle"><div class="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:bg-[#00FFAA] peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div></label></div>
+          <!-- Logo design toggle with dynamic price -->
+          <div class="mt-4 flex flex-wrap items-center justify-between bg-[#001F3D]/50 p-3 rounded-xl border border-[#00FFAA]/30 gap-3">
+            <span class="text-white"><i class="fas fa-palette mr-2"></i>Add Logo Design (+$<span id="logoPriceDisplay">300</span>)</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" name="logo_design" value="Yes" class="sr-only peer" id="logoDesignToggle">
+              <div class="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:bg-[#00FFAA] peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+            </label>
+          </div>
           <div class="mt-4 flex flex-wrap items-center justify-between bg-[#001F3D]/50 p-3 rounded-xl border border-[#00FFAA]/30 gap-3"><div class="flex items-center gap-2"><span class="text-white"><i class="fas fa-headset mr-2"></i>Request a free consultation</span><div class="tooltip"><i class="fas fa-question-circle text-[#00B3A1] text-sm cursor-help"></i><span class="tooltip-text">15‑minute call to discuss your project, no cost, no obligation.</span></div></div><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" name="free_consultation" value="Yes" class="sr-only peer" id="freeConsultToggle"><div class="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:bg-[#00FFAA] peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div></label></div>
           <div class="mt-4 flex justify-between items-center bg-[#001F3D]/50 p-3 rounded-xl border border-[#00FFAA]/30"><span class="text-white font-medium">Estimated total:</span><span id="totalPriceDisplay" class="total-price">$0 USD</span></div>
           <input type="hidden" name="total_price" id="totalPriceHidden" value="">
@@ -518,7 +517,7 @@
     </div>
   </section>
 
-  <footer class="footer-black py-10 px-6">
+  <footer id="footer" class="footer-black py-10 px-6">
     <div class="container mx-auto max-w-6xl">
       <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
         <div><h3 class="text-xl font-bold text-white mb-3">WEBCRAFT</h3><p class="text-sm text-[#00B3A1]">High‑performance digital engineering studio. We build fast, scalable, future‑ready web experiences.</p></div>
@@ -531,13 +530,12 @@
 </main>
 
 <script>
-  // ========== HARDCODED FALLBACK DATA (always works immediately) ==========
+  // ========== HARDCODED FALLBACK DATA ==========
   const hardcodedProjects = [
     { type: "wide", title: "The Daily Grind", category: "Luxury E‑commerce", description: "Artisanal coffee brand with real‑time cart, interactive tasting notes, and 98 Lighthouse score.", metric: "99% Mobile Performance Score", image: "https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=800", projectUrl: "https://webcraft007z-lgt.github.io/The-Daily-Grind/" },
     { type: "square", title: "NFT Horizon", category: "SaaS Dashboard", description: "Solana NFT analytics platform with wallet integration and real‑time trends.", metric: "+30% Engagement", image: "https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?w=600", projectUrl: "https://webcraft007z-lgt.github.io/Solana-NFT-Dashboard/" },
     { type: "square", title: "Analytics CMS", category: "Headless CMS Hub", description: "Modular content hub with dynamic routing and blazing fast previews.", metric: "100 Lighthouse Score", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600", projectUrl: "https://webcraft007z-lgt.github.io/Headless-CMS-Hub/" }
   ];
-
   const hardcodedServices = [
     { title: "Website Design Only", icon: "fas fa-pencil-ruler", description: "Pixel‑perfect, responsive UI/UX designs in Figma or Adobe XD, ready for development.", price: 800, discount: null },
     { title: "Design + Development", icon: "fas fa-code", description: "Complete frontend build (HTML/CSS/JS, React, etc.) with clean, documented source code.", price: 2500, discount: null },
@@ -615,29 +613,14 @@
       option.setAttribute('data-price', displayPrice);
       select.appendChild(option);
     });
-    const logoCheckbox = document.getElementById('logoDesignToggle');
-    const totalPriceDisplay = document.getElementById('totalPriceDisplay');
-    const totalPriceHidden = document.getElementById('totalPriceHidden');
-    function updateTotalPrice() {
-      const selectedOption = select.options[select.selectedIndex];
-      let basePrice = 0;
-      if (selectedOption && selectedOption.dataset.price) basePrice = parseInt(selectedOption.dataset.price, 10);
-      let logoPrice = logoCheckbox.checked ? 300 : 0;
-      const total = basePrice + logoPrice;
-      totalPriceDisplay.innerText = total > 0 ? `$${total.toLocaleString()} USD` : '$0 USD';
-      totalPriceHidden.value = total > 0 ? total : '';
-    }
-    select.addEventListener('change', updateTotalPrice);
-    logoCheckbox.addEventListener('change', updateTotalPrice);
-    updateTotalPrice();
   }
 
-  // Load hardcoded content immediately so belt & services are visible
+  // Load hardcoded content immediately
   renderBelt(hardcodedProjects);
   renderServices(hardcodedServices);
   populateServiceDropdown(hardcodedServices);
 
-  // === SANITY INTEGRATION (optional, will replace hardcoded content when ready) ===
+  // === SANITY INTEGRATION (public API) ===
   const SANITY_PROJECT_ID = "sa8b5pq9";
   const SANITY_DATASET = "production";
 
@@ -668,10 +651,12 @@
     }
   }
 
+  let globalLogoPrice = 300; // fallback
+
   (async () => {
     if (SANITY_PROJECT_ID && SANITY_PROJECT_ID !== "YOUR_SANITY_PROJECT_ID") {
-      const projectsQuery = `*[_type == "project"] | order(order asc) { title, category, description, metric, image, imageUrl, link, type }`;
-      const projects = await fetchSanity(projectsQuery);
+      // Projects
+      const projects = await fetchSanity(`*[_type == "project"] | order(order asc) { title, category, description, metric, image, imageUrl, link, type }`);
       if (projects && projects.length) {
         const transformed = projects.map(p => ({
           ...p,
@@ -680,16 +665,94 @@
         }));
         renderBelt(transformed);
       }
-      const servicesQuery = `*[_type == "service"] | order(order asc) { title, icon, description, price, discount }`;
-      const services = await fetchSanity(servicesQuery);
+      // Services
+      const services = await fetchSanity(`*[_type == "service"] | order(order asc) { title, icon, description, price, discount }`);
       if (services && services.length) {
         renderServices(services);
         populateServiceDropdown(services);
       }
+      // Settings (logo price)
+      const settings = await fetchSanity(`*[_type == "settings"][0] { logoPrice }`);
+      if (settings && typeof settings.logoPrice === 'number') {
+        globalLogoPrice = settings.logoPrice;
+        const logoPriceSpan = document.getElementById('logoPriceDisplay');
+        if (logoPriceSpan) logoPriceSpan.innerText = globalLogoPrice;
+        // Re‑trigger price calculation
+        const evt = new Event('change');
+        document.getElementById('serviceSelect')?.dispatchEvent(evt);
+      }
     }
   })();
 
-  // ========== HAMBURGER MENU, PARTICLES, GSAP, FORM ==========
+  // ========== PRICE CALCULATION (uses dynamic logo price) ==========
+  const serviceSelect = document.getElementById('serviceSelect');
+  const logoCheckbox = document.getElementById('logoDesignToggle');
+  const totalPriceDisplay = document.getElementById('totalPriceDisplay');
+  const totalPriceHidden = document.getElementById('totalPriceHidden');
+
+  function updateTotalPrice() {
+    const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+    let basePrice = 0;
+    if (selectedOption && selectedOption.dataset.price) {
+      basePrice = parseInt(selectedOption.dataset.price, 10);
+    }
+    let logoPrice = logoCheckbox.checked ? globalLogoPrice : 0;
+    const total = basePrice + logoPrice;
+    totalPriceDisplay.innerText = total > 0 ? `$${total.toLocaleString()} USD` : '$0 USD';
+    totalPriceHidden.value = total > 0 ? total : '';
+  }
+
+  if (serviceSelect && logoCheckbox) {
+    serviceSelect.addEventListener('change', updateTotalPrice);
+    logoCheckbox.addEventListener('change', updateTotalPrice);
+    updateTotalPrice();
+  }
+
+  // ========== SMOOTH LINEAR AUTO‑SCROLL ==========
+  let autoScrollActive = true;
+  let autoScrollTimer = null;
+  let autoScrollIntervalId = null;
+  const sections = ['work', 'process', 'about', 'services', 'contact', 'footer'];
+  let sectionIndex = 0;
+
+  function stopAutoScroll() {
+    if (autoScrollTimer) clearTimeout(autoScrollTimer);
+    if (autoScrollIntervalId) clearInterval(autoScrollIntervalId);
+    autoScrollActive = false;
+  }
+
+  function scrollToNext() {
+    if (!autoScrollActive) return;
+    if (sectionIndex >= sections.length) {
+      stopAutoScroll();
+      return;
+    }
+    const target = document.getElementById(sections[sectionIndex]);
+    if (target) {
+      gsap.to(window, {
+        duration: 1.5,
+        scrollTo: { y: target, offsetY: 0 },
+        ease: "linear",
+        overwrite: true
+      });
+    }
+    sectionIndex++;
+  }
+
+  window.addEventListener('load', () => {
+    autoScrollTimer = setTimeout(() => {
+      scrollToNext();
+      autoScrollIntervalId = setInterval(() => {
+        scrollToNext();
+      }, 10000);
+    }, 10000);
+  });
+
+  window.addEventListener('wheel', stopAutoScroll, { passive: true });
+  window.addEventListener('touchstart', stopAutoScroll);
+  document.querySelectorAll('a, button').forEach(el => el.addEventListener('click', stopAutoScroll));
+
+  // ========== HAMBURGER MENU ==========
   const hamburgerBtn = document.getElementById('hamburgerBtn');
   const sidePanel = document.getElementById('sidePanel');
   const overlay = document.getElementById('overlay');
@@ -707,6 +770,7 @@
     });
   });
 
+  // ========== PARTICLE EFFECTS ==========
   const particleContainer = document.getElementById('particleContainer');
   function createParticlesFromRect(rect, type = 'rise', count = 8, isFullWidth = true) {
     for (let i = 0; i < count; i++) {
@@ -759,6 +823,7 @@
     gsap.from(el, { opacity: 0, y: 30, duration: 0.6, scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' } });
   });
 
+  // ========== CONTACT FORM SUBMISSION ==========
   const contactForm = document.getElementById('contactForm');
   const statusDiv = document.getElementById('formStatus');
   const freeConsultToggle = document.getElementById('freeConsultToggle');
